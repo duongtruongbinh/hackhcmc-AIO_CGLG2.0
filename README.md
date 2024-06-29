@@ -18,10 +18,10 @@ Aim to develop an image analysis tool that can automatically detect the followin
 
 ### Features <Br>
 List the main features of the project:
-- Location classification: CLIP (Contrastive Language-Image Pre-Training)
-- Object detection: PaddleOCR, Owlv2 (Open-World Localization v2), and YOLOv10 
-- Image captioning: Gemini-1.5-pro-lastest
-- Enhance information extraction: Gemini-pro
+- **Location classification**: CLIP (Contrastive Language-Image Pre-Training)
+- **Object detection**: PaddleOCR, Owlv2 (Open-World Localization v2), and YOLOv10 
+- **Image captioning**: Gemini-1.5-pro-lastest
+- **Enhance information extraction**: Gemini-pro
 
 ## Installation
 
