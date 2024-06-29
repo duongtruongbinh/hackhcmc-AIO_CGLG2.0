@@ -1,4 +1,4 @@
-# Hackathon - Heineken's image analysis tool - AIO_CGLG2.0 <Br>
+# Heineken's image analysis tool - AIO_CGLG2.0 <Br>
 
 ## Table of Contents <Br>
 - Introduction
@@ -22,8 +22,6 @@ List the main features of the project:
 - Object detection: PaddleOCR, Owlv2 (Open-World Localization v2), and YOLOv10 
 - Image captioning: Gemini-1.5-pro-lastest
 - Enhance information extraction: Gemini-pro
-
-## Installation
 
 ## Installation
 
