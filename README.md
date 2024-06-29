@@ -26,5 +26,3 @@ List the main features of the project:
 ## Installation
 
 ## Usage
-
-## Examples
