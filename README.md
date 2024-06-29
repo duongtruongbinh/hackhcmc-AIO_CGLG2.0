@@ -23,6 +23,6 @@ List the main features of the project:
 - **Image captioning**: Gemini-1.5-pro-lastest
 - **Enhance information extraction**: Gemini-pro
 
-## Installation
+### Installation
 
-## Usage
+### Usage
