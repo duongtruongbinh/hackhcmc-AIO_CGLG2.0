@@ -85,5 +85,10 @@ ngrok config add-authtoken <your_auth_token>
 ```bash
 ngrok http <path_streamlit_web_app>
 ```
+### Team members
 
+- Minh-Dung Le-Quynh
+- Truong-Binh Duong
+- Thuy-Ha Le-Thi
+- Binh-Nam Le-Nguyen
 
