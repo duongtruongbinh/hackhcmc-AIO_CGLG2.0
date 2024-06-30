@@ -99,6 +99,11 @@ def ic_func(base64_str, location, options):
     gemini_pro_llm = ChatGoogleGenerativeAI(model="gemini-pro",
                                             google_api_key=gemini_key,
                                             temperature=0.2)
+    print(type(base64_str))
+    print("options: ", options)
+    print(type(options))
+    print("location: ", location)
+    print(type(location))
     enhanced_description = image_summarizing(base64_str, options,
                                              location,
                                              yolo_df, gemini_pro_vision_llm,
