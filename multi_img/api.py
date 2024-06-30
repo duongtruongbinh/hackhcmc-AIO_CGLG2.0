@@ -14,7 +14,9 @@ class ImageInput(BaseModel):
 @app.post("/multi_image/")
 async def multi_image1(input: ImageInput):
     img_base64_list = convert_to_base64(input.img_path)
-    scene_hashtag_list, content, _, _, _, _ = multi_image(
+    print("this is len of img_base64_list")
+    print(len(img_base64_list))
+    scene_hashtag_list, content = multi_image(
         img_base64_list, input.options)
     return {"scene_hashtag_list": str(scene_hashtag_list),
             "content": str(content)}

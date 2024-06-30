@@ -290,7 +290,7 @@ def is_within(box1, box2, threshold=0.5):
     box1_area = (box1['xmax'] - box1['xmin']) * (box1['ymax'] - box1['ymin'])
 
     # Calculate the ratio of the intersection area to the area of box1
-    ratio = inter_area / box1_area
+    ratio = inter_area / (box1_area + 1e-6)
 
     # Check if the ratio exceeds the threshold
     return ratio >= threshold
@@ -363,11 +363,10 @@ def process_image(image_path, df_OCR):
     all_count_df = pd.DataFrame(final_df.groupby(
         'name').size().reset_index(name='count'))
     all_count_df.rename(columns={'name': 'object'}, inplace=True)
-    print(all_count_df)
+
     ob_list = ["person", "beer bottle", "beer can", "beer carton", "beer crate", "ice bucket", "ice box", "fridge",
                "signage", "billboard", "poster", "standee", "tent card", "display stand", "tabletop display", "parasol"]
     all_count_df = all_count_df[all_count_df['object'].isin(ob_list)]
-    print(all_count_df)
 
     sub_brand_count_df = pd.DataFrame(final_df.groupby(
         'brand_class').size().reset_index(name='count'))
@@ -381,6 +380,24 @@ def process_image(image_path, df_OCR):
         'competitor')]
     competitor_brand_count_df.rename(
         columns={'brand_class': 'competitor_object'}, inplace=True)
+    beer_number = all_count_df[all_count_df['object'].isin(
+        ['beer can', 'beer bottle'])]['count'].sum()
+    person_number = all_count_df[all_count_df['object']
+                                 == 'person']['count'].sum()
+    promo_person_number = heineken_brand_count_df[heineken_brand_count_df['heineken_object'].str.contains(
+        'person')]['count'].sum()
+
+    if beer_number >= (person_number - promo_person_number):
+        drinking_person = person_number - promo_person_number
+    else:
+        drinking_person = beer_number
+
+    if drinking_person != 0:
+        df_drinking_person = pd.DataFrame(
+            {'object': ['drinking person'], 'count': [drinking_person]})
+
+        all_count_df = pd.concat(
+            [all_count_df, df_drinking_person], ignore_index=True)
 
     return final_df, all_count_df, heineken_brand_count_df, competitor_brand_count_df
     # return final_df

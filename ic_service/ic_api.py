@@ -15,6 +15,7 @@ import pandas as pd
 import re
 load_dotenv()
 gemini_key = os.environ.get("GEMINI_KEY")
+# os.environ["GOOGLE_API_KEY"] = os.environ.get("GEMINI_KEY")
 genai.configure(api_key=gemini_key)
 
 # Load gemini-pro-vision
@@ -79,8 +80,6 @@ def ic_func(base64_str, location, options):
     yolo_url = os.environ.get("OD_URL")
     x = requests.post(yolo_url, json=myobj)
     y = json.loads(x.text)
-
-    print(y["info_od"])
     final_df = ast.literal_eval(y["info_od"].replace("nan", "None"))
     all_count_df = ast.literal_eval(y["all_count_df"].replace("nan", "None"))
     heineken_brand_count_df = ast.literal_eval(
@@ -91,11 +90,11 @@ def ic_func(base64_str, location, options):
         yolo_df = final_df[final_df['confidence'] > 0.7]
     except:
         yolo_df = final_df
-
+    print("Start gemini_pro_vision_llm to image")
     # convert base64 string to image url
     gemini_pro_vision_llm = genai.GenerativeModel(model_name="gemini-1.5-pro-latest",
                                                   generation_config=generation_config)
-
+    print("Start gemini_pro_llm to image")
     # Load gemini-pro
     gemini_pro_llm = ChatGoogleGenerativeAI(model="gemini-pro",
                                             google_api_key=gemini_key,

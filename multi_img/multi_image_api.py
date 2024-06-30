@@ -15,7 +15,8 @@ load_dotenv()
 clip_url = os.environ.get("CLIP_URL")
 ic_url = os.environ.get("IC_URL")
 genai.configure(api_key=os.environ.get("GOOGLE_API_KEY"))
-google_api_key = os.environ.get("GOOGLE_API_KEY")
+# google_api_key = os.environ.get("GOOGLE_API_KEY")
+os.environ["GOOGLE_API_KEY"] = os.environ.get("GOOGLE_API_KEY")
 
 
 def multi_image(list_img_base64, options):
@@ -28,7 +29,7 @@ def multi_image(list_img_base64, options):
         ic_obj = {
             "base64_string": img_base64,
             "location": clip_extract["location"],
-            "options": ["problem1", "problem2", "problem3", "problem4", "problem5"]
+            "options": ["problem1"]
         }
         ic_object = requests.post(ic_url, json=ic_obj)
         print(ic_object)
@@ -49,7 +50,7 @@ def multi_image(list_img_base64, options):
         ]
     )
     gemini_pro_llm = ChatGoogleGenerativeAI(model="gemini-pro",
-                                            google_api_key=google_api_key,
+                                            # google_api_key=google_api_key,
                                             temperature=0.2)
     content = gemini_pro_llm.invoke([message]).content
     return list(set(scene_hashtag_list)), content
