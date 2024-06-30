@@ -2,11 +2,7 @@ from utils_func import process_image
 import json
 import requests
 import pandas as pd
-from io import StringIO
 import ast
-import base64
-import numpy as np
-import cv2
 from dotenv import load_dotenv
 import os
 load_dotenv()
@@ -41,15 +37,11 @@ def main_yolo(image_path):
     df.rename(columns={"text": "name"}, inplace=True)
     final_df, all_count_df, heineken_brand_count_df, competitor_brand_count_df = process_image(
         image_path, df)
-    # print("FINAL_DF: ", final_df)
-    # print("ALL_COUNT_DF: ", all_count_df)
     if all_count_df is not None:
         all_count_df = all_count_df.to_dict(orient="records")
-    # print("HEINEKEN_BRAND_COUNT_DF: ", heineken_brand_count_df)
     if heineken_brand_count_df is not None:
         heineken_brand_count_df = heineken_brand_count_df.to_dict(
             orient="records")
-    # print("COMPETITOR_BRAND_COUNT_DF: ", competitor_brand_count_df)
     if competitor_brand_count_df is not None:
         competitor_brand_count_df = competitor_brand_count_df.to_dict(
             orient="records")

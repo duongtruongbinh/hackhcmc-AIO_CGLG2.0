@@ -1,4 +1,3 @@
-from vertexai.generative_models import GenerationConfig
 from dotenv import load_dotenv
 import os
 from image_description import image_summarizing, extract_hashtag
@@ -9,7 +8,6 @@ import requests
 from io import BytesIO, StringIO
 import json
 import ast
-from langchain_core.messages import HumanMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 import pandas as pd
 import re

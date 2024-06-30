@@ -12,3 +12,6 @@ __pycache__/
 
 # image folder
 image/
+test_image/
+# vscode folder
+.vscode/

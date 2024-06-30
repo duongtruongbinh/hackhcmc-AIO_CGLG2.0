@@ -1,10 +1,7 @@
 # Main function
 
-import google.generativeai as genai
 from langchain_core.messages import HumanMessage
-from langchain_google_genai import ChatGoogleGenerativeAI
 from helper_functions import convert_df2str, convert
-from vertexai.generative_models import GenerationConfig
 import time
 # -----***-----
 # Prompt list for 5 business problems
