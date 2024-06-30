@@ -25,6 +25,10 @@ List the main features of the project:
 - **Image captioning**: Gemini-1.5-pro-lastest
 - **Enhance information extraction**: Gemini-pro
 
+Anothe technical features:
+- **APIs**: FastAPI, Streamlit
+- **Deployment**: ngrok
+
 ### Installation
 1. Clone the repository
 ```bash
