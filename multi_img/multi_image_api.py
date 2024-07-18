@@ -26,10 +26,11 @@ def multi_image(list_img_base64, options):
         clip_obj = {"base64_string": img_base64}
         clip_object = requests.post(clip_url, json=clip_obj)
         clip_extract = json.loads(clip_object.text)
+
         ic_obj = {
             "base64_string": img_base64,
-            "location": str(clip_extract["location"]),
-            "options": ["problem1", "problem2", "problem3", "problem4", "problem5"]
+            "location": clip_extract["location"],
+            "options": ["problem1"]
         }
         ic_object = requests.post(ic_url, json=ic_obj)
         print(ic_object)

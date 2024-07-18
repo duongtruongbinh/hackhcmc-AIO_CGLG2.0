@@ -13,8 +13,11 @@ __pycache__/
 # image folder
 image/
 test_image/
+Classification/
 
 # vscode folder
 .vscode/
 
-# git folder
+.DS_Store
+
+*.csv

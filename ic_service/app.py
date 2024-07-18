@@ -83,37 +83,37 @@ def main():
 def multiple_images():
     st.write("This feature is under development.")
     # Allow users to upload multiple files
-    # uploaded_files = st.file_uploader(
-    #     "Choose image files", accept_multiple_files=True, type=['png', 'jpg', 'jpeg'])
+    uploaded_files = st.file_uploader(
+        "Choose image files", accept_multiple_files=True, type=['png', 'jpg', 'jpeg'])
 
-    # # If files are uploaded
-    # if uploaded_files:
-    #     st.write("Number of uploaded images:", len(uploaded_files))
+    # If files are uploaded
+    if uploaded_files:
+        st.write("Number of uploaded images:", len(uploaded_files))
 
-    #     analysis_results = []  # To store the results for Excel export
+        analysis_results = []  # To store the results for Excel export
 
-    #     # Display and analyze each image
-    #     num_images = len(uploaded_files)
-    #     multi_url = os.environ.get("MULTI_URL")
-    #     myobj = {
-    #         "img_path": uploaded_files,
-    #         "options": ["problem1", "problem2", "problem3", "problem4", "problem5"]
-    #     }
-    #     x = requests.post(multi_url, json=myobj)
-    #     y = json.loads(x.text)
-    #     temp = y["context"]
-    #     print(temp)
-    #     for i in range(0, num_images, 3):  # Process 3 images at a time
-    #         cols = st.columns(3)
-    #         for j in range(3):
-    #             if i + j < num_images:
-    #                 with cols[j]:
-    #                     uploaded_file = uploaded_files[i + j]
-    #                     image = Image.open(uploaded_file)
-    #                     # Resize image to a fixed size for better layout
-    #                     image = image.resize((300, 300))
-    #                     st.image(
-    #                         image, caption=f"Image {i + j + 1}", use_column_width=True)
+        # Display and analyze each image
+        num_images = len(uploaded_files)
+        multi_url = os.environ.get("MULTI_URL")
+        myobj = {
+            "img_path": uploaded_files,
+            "options": ["problem1", "problem2", "problem3", "problem4", "problem5"]
+        }
+        x = requests.post(multi_url, json=myobj)
+        y = json.loads(x.text)
+        temp = y["context"]
+        print(temp)
+        for i in range(0, num_images, 3):  # Process 3 images at a time
+            cols = st.columns(3)
+            for j in range(3):
+                if i + j < num_images:
+                    with cols[j]:
+                        uploaded_file = uploaded_files[i + j]
+                        image = Image.open(uploaded_file)
+                        # Resize image to a fixed size for better layout
+                        image = image.resize((300, 300))
+                        st.image(
+                            image, caption=f"Image {i + j + 1}", use_column_width=True)
 
 
 def single_image():
