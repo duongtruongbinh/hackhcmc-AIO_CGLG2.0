@@ -1,9 +1,0 @@
-numpy
-pandas
-ultralytics
-supervision
-opencv-python
-uvicorn
-fastapi
-supervision
-inference-gpu[yolo-world]==0.12.0
