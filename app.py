@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 import time
 import cv2
 load_dotenv()
-ic_url = 'http://172.25.212.122:8001/image_captioning/'
+
 # Set environment variable to resolve OpenMP issue
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 if 'analysis_results' not in st.session_state:
@@ -115,9 +115,10 @@ def multiple_images():
             "options": options
         }
         start_time = time.time()
-        x = requests.post(multi_url, json=myobj)
-        y = json.loads(x.text)
-        scene_hashtag_list, content = literal_eval(y['scene_hashtag_list']), y['content']
+        with st.spinner("Analyzing images... Please wait."):  
+            x = requests.post(multi_url, json=myobj)
+            y = json.loads(x.text)
+            scene_hashtag_list, content = literal_eval(y['scene_hashtag_list']), y['content']
         end_time = time.time()
         # show images
         n_col = 2
@@ -130,7 +131,10 @@ def multiple_images():
                 image = Image.open(uploaded_file)
                 st.image(image.resize((image.width // 2, image.height // 2)))
                 
-                st.markdown(scene_hashtag_list[i][0], unsafe_allow_html=True)
+                for s in scene_hashtag_list[i]:
+                    
+                    st.markdown(s, unsafe_allow_html=True)
+        st.markdown("## Analysis Results")
         st.markdown(content)
         st.markdown(f"Elapsed time: {end_time - start_time:.2f} seconds")
         
@@ -267,12 +271,11 @@ def draw_annotated(problem, yolo_df, image):
 
 
 def clip_api(upload_file):
-    clip_url = 'http://172.25.212.122:8001/image_classifier/'
+    clip_url = os.environ.get("CLIP_URL")
     myobj = {
         "base64_string": convert_image_to_base64(upload_file)
     }
     x = requests.post(clip_url, json=myobj)
-    print(x.text)
     y = json.loads(x.text)
     location, environment = y["location"], y["environment"]
     return location, environment
@@ -286,11 +289,23 @@ def analyze_image(upload_file, location, options):
         "location": location,
         "options": options
     }
+    ic_url = os.environ.get("IC_URL")
     x = requests.post(ic_url, json=myobj)
     y = json.loads(x.text)
-    temp = literal_eval(y["ic"])
-    scence_hastags, enhance_description, yolo_df, all_count_df, heineken_brand_count_df, competitor_brand_count_df = temp
-    return scence_hastags, enhance_description, yolo_df, all_count_df, heineken_brand_count_df, competitor_brand_count_df
+    
+    try:
+        scene_hashtags = y["scene_hashtags"]
+        enhanced_description = y["enhanced_description"]
+        yolo_df = literal_eval(y["yolo_df"])
+        all_count_df = literal_eval(y["all_count_df"])
+        heineken_brand_count_df = literal_eval(y["heineken_brand_count_df"])
+        competitor_brand_count_df = literal_eval(y["competitor_brand_count_df"])
+        print(yolo_df, all_count_df, heineken_brand_count_df, competitor_brand_count_df)
+    except (KeyError, ValueError) as e:
+        print(f"Error processing the response: {e}")
+        return None, None, None, None, None, None
+    
+    return scene_hashtags, enhanced_description, yolo_df, all_count_df, heineken_brand_count_df, competitor_brand_count_df
 
 
 def show_info():

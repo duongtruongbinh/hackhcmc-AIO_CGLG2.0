@@ -12,7 +12,6 @@ class ImageInput(BaseModel):
 @app.post("/process_image/")
 async def process_image(input: ImageInput):
     ocr_re = process(input.base64_string)
-    print(ocr_re)
     ocr_re1 = ocr_re[0]["res"]
     if len(ocr_re1) == 0:
         ocr_re1 = [{'text': "CGLG2.0", "confidence": 0.99, "text_region": [[788.0, 70.0], [1477.0, 68.0], [1477.0, 126.0], [788.0, 128.0]]}]

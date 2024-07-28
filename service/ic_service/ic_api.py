@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import os
-from .image_description import image_summarizing, extract_hashtag_gpt, image_summarizing_gpt, extract_hashtag
+from .image_description import extract_hashtag_gpt, image_summarizing_gpt
 import google.generativeai as genai
 import base64
 from PIL import Image
@@ -8,7 +8,6 @@ import requests
 from io import BytesIO, StringIO
 import json
 import ast
-from langchain_google_genai import ChatGoogleGenerativeAI
 import pandas as pd
 import re
 from openai import OpenAI
@@ -57,76 +56,9 @@ def ensure_dataframe(data_str):
         return df
 
 
-def ic_func(base64_str, location, options):
-
-    # clip_url = os.environ.get("CLIP_URL")
-    # x = requests.post(clip_url, json=myobj)
-    # y = json.loads(x.text)
-    # CLIP_class, environment = y['location'], y['environment']
-    myobj = {'base64_string': base64_str}
-
-    # ocr_url = os.environ.get("OCR_URL")
-    # x = requests.post(ocr_url, json=myobj)
-    # y = json.loads(x.text)
-    # data_list = ast.literal_eval(y["ocr_result"])
-    # df = pd.DataFrame(data_list)
-    # column_name = 'text'
-    # string_to_check = 'CGLG2.0'
-    # df = df[df[column_name] != string_to_check]
-    # df = convert_OCR_result(df)
-    # ocr_df = df[df['confidence'] > 0.7]
-
-    yolo_url = os.environ.get("OD_URL")
-    x = requests.post(yolo_url, json=myobj)
-    y = json.loads(x.text)
-    final_df = ast.literal_eval(y["info_od"].replace("nan", "None"))
-    all_count_df = ast.literal_eval(y["all_count_df"].replace("nan", "None"))
-    heineken_brand_count_df = ast.literal_eval(
-        y["heineken_brand_count_df"].replace("nan", "None"))
-    competitor_brand_count_df = ast.literal_eval(
-        y["competitor_brand_count_df"].replace("nan", "None"))
-    try:
-        yolo_df = final_df[final_df['confidence'] > 0.7]
-    except:
-        yolo_df = final_df
-    print("Start gemini_pro_vision_llm to image")
-    # convert base64 string to image url
-    gemini_pro_vision_llm = genai.GenerativeModel(model_name="gemini-1.5-pro-latest",
-                                                  generation_config=generation_config)
-    print("Start gemini_pro_llm to image")
-    # Load gemini-pro
-    gemini_pro_llm = ChatGoogleGenerativeAI(model="gemini-pro",
-                                            google_api_key=gemini_key,
-                                            temperature=0.2)
-    print(type(base64_str))
-    print("options: ", options)
-    print(type(options))
-    print("location: ", location)
-    print(type(location))
-    enhanced_description = image_summarizing(base64_str, options,
-                                             location,
-                                             yolo_df, gemini_pro_vision_llm,
-                                             gemini_pro_llm)
-    scene_hashtags = extract_hashtag(
-        gemini_pro_llm, enhanced_description)
-    if len(all_count_df) == 0:
-        all_count_df = None
-    if len(heineken_brand_count_df) == 0:
-        heineken_brand_count_df = None
-    if len(competitor_brand_count_df) == 0:
-        competitor_brand_count_df = None
-    print("yolo_df: ", yolo_df)
-    print("all_count_df: ", all_count_df)
-    print("heineken_brand_count_df: ", heineken_brand_count_df)
-    print("competitor_brand_count_df: ", competitor_brand_count_df)
-    return scene_hashtags, enhanced_description, yolo_df, all_count_df, heineken_brand_count_df, competitor_brand_count_df
 
 
 async def ic_func_openAI(base64_str, location, options):
-    # clip_url = os.environ.get("CLIP_URL")
-    # x = requests.post(clip_url, json=myobj)
-    # y = json.loads(x.text)
-    # CLIP_class, environment = y['location'], y['environment']
     myobj = {'base64_string': base64_str}
 
     # ocr_url = os.environ.get("OCR_URL")
