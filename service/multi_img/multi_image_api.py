@@ -32,44 +32,11 @@ async def multi_image(list_img_base64, options):
             if response.status_code == 200:
                 clip_object = response.json()
                 scence_hastags, enhance_description, _, _, _, _ = await ic_func_openAI(img_base64, clip_object["location"], options)
-                scene_hashtag_list.append(scence_hastags)
+                # scene_hashtag_list.append(scence_hastags)
                 description_list.append(enhance_description)
             else:
                 print(f"Error calling image_classifier: {response.status_code}")
-    # message = HumanMessage(
-    #     content=[
-    #         {
-    #             "type": "text",
-    #             "text": f"There are some description about about same location as following: \
-    #           {description_list}. Write a detailed description about this location. \
-    #           Note that maybe there are some duplicate information, remove it and only use available information.",
-    #         },
-    #     ]
-    # )
-    # gemini_pro_llm = ChatGoogleGenerativeAI(model="gemini-pro",
-    #                                         google_api_key=google_api_key,
-    #                                         temperature=0.2)
-    # content = gemini_pro_llm.invoke([message]).content
-    gpt = OpenAI(api_key=open_ai_api)
-    response = gpt.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": f"There are some description about about same location as following: \
-                  {description_list}. Write a detailed description about this location. \
-                  Note that maybe there are some duplicate information, remove it and only use available information."
-                    }
-                ]
-            }
-        ],
-        max_tokens=500
-    )
-    content = response.choices[0].message.content.strip()
-    return scene_hashtag_list, content
+    return scene_hashtag_list, description_list
 
 
 def pil_image_to_base64(image):
