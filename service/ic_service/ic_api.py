@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import os
 from .image_description import extract_hashtag_gpt, image_summarizing_gpt
+from .openai_detection import detect_obj_openai, combine_detect_df
 import google.generativeai as genai
 import base64
 from PIL import Image
@@ -84,11 +85,18 @@ async def ic_func_openAI(base64_str, location, options):
     enhanced_description = image_summarizing_gpt(base64_str, options, location, yolo_df, gpt)
     scene_hashtags = 'null'
 
+    heineken_brand_count_df_1, competitor_brand_count_df_1 = detect_obj_openai(img_str, gpt)
+
+    # Combine DataFrames
+    final_heineken_brand_count_df, final_competitor_brand_count_df = combine_detect_df(
+        heineken_brand_count_df_1, competitor_brand_count_df_1, heineken_brand_count_df, heineken_brand_count_df)
+
+
     if len(all_count_df) == 0:
         all_count_df = None
-    if len(heineken_brand_count_df) == 0:
-        heineken_brand_count_df = None
-    if len(competitor_brand_count_df) == 0:
-        competitor_brand_count_df = None
+    if len(final_heineken_brand_count_df) == 0:
+        final_heineken_brand_count_df = None
+    if len(final_competitor_brand_count_df) == 0:
+        final_competitor_brand_count_df = None
 
-    return scene_hashtags, enhanced_description, yolo_df, all_count_df, heineken_brand_count_df, competitor_brand_count_df
+    return scene_hashtags, enhanced_description, yolo_df, all_count_df, final_heineken_brand_count_df, final_competitor_brand_count_df

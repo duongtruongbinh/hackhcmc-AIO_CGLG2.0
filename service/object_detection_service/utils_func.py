@@ -382,3 +382,32 @@ def process_image(image_path, df_OCR):
         all_count_df = pd.concat([all_count_df, df_drinking_person], ignore_index=True)
 
     return final_df, all_count_df, heineken_brand_count_df, competitor_brand_count_df
+
+
+# Giải thích quá trình xử lý các dataframe sau khi detect xong:
+# 1. df_OCR: 
+#     - ['xmin', 'ymin', 'xmax', 'ymax', 'confidence', 'name'] sau khi detect OCR xong, với name là text đã được detect ra
+#     - ['xmin', 'ymin', 'xmax', 'ymax', 'confidence', 'name', 'new_name'] thêm cột new_name với các giá trị theo công thức:  + {name}
+#                                                                                                                             + (beer competitor) {name}
+#                                                                                                                             + (soft drink competitor) {name}
+#                                                                                                                             + (mineral water competitor) {name}
+#     - ['xmin', 'ymin', 'xmax', 'ymax', 'confidence', 'name', 'new_name', 'brand_class'] dùng DBScan để xác định các new_name nào nằm thành cụm với nhau thì là beer_carton, còn riêng lẻ thì sẽ là logo
+#                                                                                             {brand_class} = {new_name} + {logo hoặc beer_carton}
+#     - ['xmin', 'ymin', 'xmax', 'ymax', 'confidence', 'name', 'brand_class'] bỏ đi cột new_name và các giá trị null ở cột brand_class
+# 2. df_OD:
+#     - ['xmin', 'ymin', 'xmax', 'ymax', 'confidence', 'name'] từ 2 df_person và df_owl2 gộp lại với nhau sau khi dùng 2 model là yolo và owl2 để detect
+#     - ['xmin', 'ymin', 'xmax', 'ymax', 'confidence', 'name', 'brand_class'] cột brand_class được thêm vào để xác định các object thuộc các brand nào
+#                                                                             df_OD{brand_class} = df_OD{name} + df_OCR{name}
+# 3. filtered_df:
+#     - ['xmin', 'ymin', 'xmax', 'ymax', 'confidence', 'name', 'brand_class'] lấy từ df_OD nhưng bỏ bớt các object là lon/chai bia nằm trong toạ độ các object là standee, biển quảng cáo
+# 4. final_df:
+#     - ['xmin', 'ymin', 'xmax', 'ymax', 'confidence', 'name', 'brand_class'] = filtered_df + df_OCR
+# 5. sub_brand_count_df:
+#     - ['brand_class', 'count'] từ final_df được group lại để count với sub_brand_count_df['brand_class'] = final_df['brand_class']
+# 6. heineken_brand_count_df:
+#     - ['heineken_object', 'count'] là sub_brand_count_df nhưng chỉ lấy brand của Heineken với cột heineken_brand_count_df['heineken_object'] = final_df['brand_class']
+# 7. competitor_brand_count_df:
+#     - ['competitor_object', 'count'] là sub_brand_count_df nhưng chỉ lấy competitor của Heineken với cột competitor_brand_count_df['competitor_object'] = final_df['brand_class']
+# 8. all_count_df:
+#     - ['object', 'count'] từ final_df được group lại để count với all_count_df['object'] = final_df['name']
+#     - ['object', 'count'] thêm data về người uống bia bằng cách tính drinking_person = total_person - promo_person với promo_person được xác định bằng trùng lặp toạ độ giữa person và heineken logo
