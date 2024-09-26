@@ -335,7 +335,10 @@ def process_image(image_path, df_OCR):
         for _, ocr in df_OCR.iterrows():
             if is_within(ocr, obj) and ocr['name'] is not None:
                 matched_brands.append(ocr['name'])
-        new_name = obj['name'] + ' ' + ' '.join(matched_brands) if matched_brands else None
+        if matched_brands:
+            new_name = ' '.join(matched_brands) + ' ' + obj['name']
+        else:
+            new_name = obj['name']
         brand_class.append(new_name)
     df_OD['brand_class'] = brand_class
 
